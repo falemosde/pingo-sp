@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <title>PINGO — Portal Integrado de Necessidades, Guias e Orientações</title>
+    <meta
+      name="description"
+      content="PINGO: Seu ponto de apoio para localizar serviços comunitários em São Paulo."
+    />
+
+    <!-- Configuração PWA -->
+    <link rel="manifest" href="./manifest.json" />
+    <meta name="theme-color" content="#8A5832" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <meta name="apple-mobile-web-app-title" content="PINGO" />
+    <link rel="icon" type="image/png" href="./icons/pingo-logo.png" />
+    <link rel="apple-touch-icon" href="./icons/icon-192.png" />
+
+    <!-- Pré-conexão com as APIs públicas -->
+    <link rel="preconnect" href="https://brasilapi.com.br" crossorigin />
+    <link rel="preconnect" href="https://viacep.com.br" crossorigin />
+    <link rel="preconnect" href="https://overpass-api.de" crossorigin />
+
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Lucide Icons via CDN -->
+    <script src="https://unpkg.com/lucide@latest" defer></script>
+
+    <!-- Estilos complementares -->
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body
+    class="bg-stone-200 text-stone-800 antialiased selection:bg-amber-100 selection:text-amber-950"
+  >
+    <!-- Container Principal Mobile-First (fundo quente e suave) -->
+    <div
+      class="max-w-md mx-auto min-h-screen bg-stone-50 bg-gradient-to-b from-amber-50/40 to-stone-50 shadow-lg flex flex-col relative"
+    >
+      <!-- Cabeçalho PINGO (#8A5832) -->
+      <header
+        class="bg-[#8A5832] text-white px-4 pt-4 pb-4 rounded-b-3xl shadow-md sticky top-0 z-20"
+      >
+        <div class="flex items-start justify-between gap-2">
+          <div class="flex items-start gap-2.5 min-w-0">
+            <!-- Logo oficial PINGO -->
+            <div
+              class="w-12 h-12 rounded-2xl bg-amber-50/95 border border-white/30 flex items-center justify-center shrink-0 shadow-sm p-1 mt-0.5"
+            >
+              <img
+                src="./icons/pingo-logo.png"
+                alt="Logo PINGO"
+                width="44"
+                height="44"
+                class="w-full h-full object-contain"
+              />
+            </div>
+            <div class="min-w-0">
+              <div class="flex items-center gap-1.5">
+                <h1
+                  class="text-lg font-extrabold leading-none tracking-wide text-white"
+                >
+                  PINGO
+                </h1>
+                <span
+                  class="px-1.5 py-0.5 rounded-md bg-white/20 text-[10px] font-bold tracking-wider uppercase text-white"
+                  >SP</span
+                >
+              </div>
+              <p
+                class="text-[11px] font-medium text-amber-50/95 leading-snug mt-1"
+              >
+                Portal Integrado de Necessidades, Guias e Orientações
+              </p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-1.5 shrink-0">
+            <button
+              id="btn-install-pwa"
+              type="button"
+              class="hidden items-center gap-1 px-2.5 py-1.5 rounded-xl bg-white text-[#8A5832] text-xs font-semibold shadow-sm hover:bg-amber-50 active:scale-95 transition"
+              title="Instalar PINGO na tela inicial"
+            >
+              <i
+                data-lucide="download"
+                class="w-3.5 h-3.5"
+                aria-hidden="true"
+              ></i>
+              <span>Instalar</span>
+            </button>
+
+            <button
+              id="btn-info"
+              type="button"
+              class="w-9 h-9 rounded-xl bg-black/15 border border-white/20 flex items-center justify-center hover:bg-black/25 active:scale-95 transition"
+              aria-label="Sobre o PINGO"
+              title="Sobre o PINGO"
+            >
+              <i
+                data-lucide="info"
+                class="w-4 h-4 text-white"
+                aria-hidden="true"
+              ></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Slogan discreto -->
+        <p class="mt-2 text-[11px] text-amber-50/85 leading-snug">
+          Seu ponto de apoio para localizar serviços comunitários em São Paulo.
+        </p>
+
+        <!-- Barra de Localização + Input de CEP (Trava SP: 01000-000 a 19999-999) -->
+        <div
+          class="mt-2.5 bg-black/15 border border-white/20 rounded-2xl p-2.5 space-y-1.5"
+        >
+          <div class="flex items-center justify-between gap-2">
+            <div class="flex items-center gap-1.5 min-w-0">
+              <i
+                data-lucide="map-pin"
+                class="w-4 h-4 text-amber-200 shrink-0"
+                aria-hidden="true"
+              ></i>
+              <p
+                id="location-display"
+                class="text-xs font-semibold text-white truncate"
+              >
+                São Paulo (SP) • Digite seu CEP
+              </p>
+            </div>
+
+            <div class="flex items-center gap-1 shrink-0">
+              <label for="cep-input" class="sr-only"
+                >Digite um CEP do Estado de São Paulo (8 dígitos)</label
+              >
+              <div class="relative flex items-center">
+                <input
+                  id="cep-input"
+                  name="cep"
+                  type="text"
+                  inputmode="numeric"
+                  autocomplete="postal-code"
+                  maxlength="9"
+                  placeholder="CEP SP 00000-000"
+                  aria-describedby="cep-feedback"
+                  class="w-36 bg-white text-stone-900 placeholder:text-stone-400 text-xs font-semibold px-2.5 py-1.5 pr-7 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
+                />
+                <span
+                  id="cep-spinner"
+                  class="hidden absolute right-2 w-3.5 h-3.5 border-2 border-amber-700 border-t-transparent rounded-full animate-spin"
+                  aria-hidden="true"
+                ></span>
+                <button
+                  id="btn-clear-cep"
+                  type="button"
+                  class="hidden absolute right-1.5 p-0.5 text-stone-400 hover:text-stone-700 rounded"
+                  aria-label="Limpar CEP"
+                  title="Limpar CEP"
+                >
+                  <i data-lucide="x" class="w-3.5 h-3.5" aria-hidden="true"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <p
+            id="cep-feedback"
+            class="hidden text-[11px] font-medium leading-snug"
+            aria-live="polite"
+          ></p>
+        </div>
+      </header>
+
+      <!-- Conteúdo Principal -->
+      <main class="flex-1 px-4 pt-4 pb-28 space-y-4">
+        <!-- Banner Offline -->
+        <div
+          id="offline-banner"
+          class="hidden items-center gap-2 bg-stone-100 border border-stone-300 text-stone-800 text-xs font-medium px-3 py-2 rounded-xl"
+          role="status"
+        >
+          <i
+            data-lucide="wifi-off"
+            class="w-4 h-4 text-amber-700 shrink-0"
+            aria-hidden="true"
+          ></i>
+          <span
+            >Modo offline — exibindo os serviços salvos do Estado de São
+            Paulo.</span
+          >
+        </div>
+
+        <!-- Indicador Discreto de Carregamento (não trava a tela) -->
+        <div
+          id="cascade-loading"
+          class="hidden items-center gap-2.5 bg-amber-50 border border-amber-200 text-amber-900 px-3 py-2 rounded-2xl"
+          role="status"
+          aria-live="polite"
+        >
+          <span
+            class="w-4 h-4 border-2 border-amber-700 border-t-transparent rounded-full animate-spin shrink-0"
+            aria-hidden="true"
+          ></span>
+          <p id="cascade-loading-step" class="text-xs font-semibold truncate">
+            Consultando CEP em São Paulo...
+          </p>
+        </div>
+
+        <!-- Cabeçalho da Aba Ativa + Badge de Localização -->
+        <section aria-labelledby="tab-title" class="space-y-3">
+          <div class="flex items-start justify-between gap-2">
+            <div>
+              <h2 id="tab-title" class="text-base font-bold text-stone-900">
+                Zeladoria e Infraestrutura
+              </h2>
+              <p id="tab-subtitle" class="text-xs text-stone-500 mt-0.5">
+                Discagem rápida, prefeituras/subprefeituras e ecopontos em São
+                Paulo.
+              </p>
+            </div>
+            <span
+              id="mode-badge"
+              class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-800 border border-amber-200 shrink-0"
+            >
+              <span class="w-1.5 h-1.5 rounded-full bg-amber-700"></span>
+              <span>Base SP</span>
+            </span>
+          </div>
+
+          <!-- Busca rápida dentro da aba -->
+          <div class="relative">
+            <label for="search-input" class="sr-only"
+              >Filtrar unidades exibidas nesta aba</label
+            >
+            <i
+              data-lucide="search"
+              class="w-4 h-4 text-stone-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
+              aria-hidden="true"
+            ></i>
+            <input
+              id="search-input"
+              type="search"
+              placeholder="Filtrar por nome, cidade, rua ou tipo..."
+              class="w-full bg-white border border-stone-200 rounded-2xl pl-9 pr-9 py-2.5 text-sm text-stone-800 placeholder:text-stone-400 shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-700/25 focus:border-amber-700 transition"
+            />
+            <button
+              id="btn-clear-search"
+              type="button"
+              class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 p-1 text-stone-400 hover:text-stone-700 rounded-lg"
+              aria-label="Limpar filtro"
+            >
+              <i data-lucide="x" class="w-4 h-4" aria-hidden="true"></i>
+            </button>
+          </div>
+        </section>
+
+        <!-- Cards Fixos de Discagem Rápida (visíveis no topo da Aba 1) -->
+        <section
+          id="national-pinned-section"
+          class="space-y-2.5"
+          aria-label="Discagem rápida de emergência"
+        >
+          <div class="flex items-center justify-between">
+            <h3
+              class="text-[11px] font-bold uppercase tracking-wider text-stone-500 flex items-center gap-1.5"
+            >
+              <i
+                data-lucide="phone-call"
+                class="w-3.5 h-3.5 text-amber-700"
+                aria-hidden="true"
+              ></i>
+              <span>Discagem Rápida SP</span>
+            </h3>
+            <span class="text-[11px] text-stone-400">Fixo no topo</span>
+          </div>
+          <div id="national-pinned-list" class="grid grid-cols-1 gap-2.5"></div>
+        </section>
+
+        <!-- Lista de Unidades -->
+        <section id="services-section" aria-live="polite" class="space-y-3">
+          <div class="flex items-center justify-between gap-2">
+            <h3
+              id="list-section-heading"
+              class="text-[11px] font-bold uppercase tracking-wider text-stone-500 truncate"
+            >
+              Unidades em São Paulo (Ex.: Jardim Bom Tempo)
+            </h3>
+            <span
+              id="list-count"
+              class="text-[11px] font-semibold text-amber-700 shrink-0"
+            ></span>
+          </div>
+
+          <div id="services-list" role="tabpanel" class="space-y-3"></div>
+        </section>
+      </main>
+
+      <!-- Barra de Navegação Inferior Fixa (Bottom Tab Bar com 3 Abas) -->
+      <nav
+        aria-label="Categorias principais"
+        class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md bg-white/95 backdrop-blur-md border-t border-stone-200 shadow-[0_-4px_20px_rgba(69,26,3,0.08)] z-30 pb-safe"
+      >
+        <div role="tablist" class="grid grid-cols-3 gap-1 px-2 pt-1.5">
+          <button
+            id="tab-zeladoria"
+            type="button"
+            role="tab"
+            data-tab="zeladoria"
+            aria-selected="true"
+            aria-controls="services-list"
+            class="tab-btn flex flex-col items-center justify-center gap-1 py-2 px-1 rounded-2xl text-[11px] font-semibold leading-tight text-center transition"
+          >
+            <i data-lucide="building-2" class="w-5 h-5" aria-hidden="true"></i>
+            <span>Zeladoria e Infraestrutura</span>
+          </button>
+
+          <button
+            id="tab-fome"
+            type="button"
+            role="tab"
+            data-tab="fome"
+            aria-selected="false"
+            aria-controls="services-list"
+            class="tab-btn flex flex-col items-center justify-center gap-1 py-2 px-1 rounded-2xl text-[11px] font-semibold leading-tight text-center transition"
+          >
+            <i data-lucide="utensils" class="w-5 h-5" aria-hidden="true"></i>
+            <span>Fome e Apoio Alimentar</span>
+          </button>
+
+          <button
+            id="tab-estudos"
+            type="button"
+            role="tab"
+            data-tab="estudos"
+            aria-selected="false"
+            aria-controls="services-list"
+            class="tab-btn flex flex-col items-center justify-center gap-1 py-2 px-1 rounded-2xl text-[11px] font-semibold leading-tight text-center transition"
+          >
+            <i
+              data-lucide="graduation-cap"
+              class="w-5 h-5"
+              aria-hidden="true"
+            ></i>
+            <span>Estudos e Oportunidades</span>
+          </button>
+        </div>
+      </nav>
+    </div>
+
+    <!-- Modal Acessível Sobre o PINGO -->
+    <dialog
+      id="info-dialog"
+      aria-labelledby="info-dialog-title"
+      class="w-[calc(100%-2rem)] max-w-sm rounded-3xl p-0 bg-white shadow-2xl border border-stone-200 m-auto"
+    >
+      <div class="p-5 space-y-4">
+        <div class="flex items-start justify-between gap-3">
+          <div>
+            <h2
+              id="info-dialog-title"
+              class="text-base font-extrabold text-stone-900"
+            >
+              Sobre o PINGO
+            </h2>
+            <p class="text-xs text-stone-500 mt-0.5">
+              Portal Integrado de Necessidades, Guias e Orientações
+            </p>
+          </div>
+          <button
+            id="btn-close-dialog"
+            type="button"
+            class="p-1.5 rounded-xl text-stone-400 hover:text-stone-700 hover:bg-stone-100 transition"
+            aria-label="Fechar janela de informações"
+          >
+            <i data-lucide="x" class="w-5 h-5" aria-hidden="true"></i>
+          </button>
+        </div>
+
+        <p class="text-xs text-stone-600 leading-relaxed">
+          <em
+            >"Seu ponto de apoio para localizar serviços comunitários em São
+            Paulo."</em
+          >
+        </p>
+
+        <div class="space-y-2.5 text-xs text-stone-600">
+          <div
+            class="p-3 rounded-2xl bg-stone-50 border border-stone-200 space-y-1"
+          >
+            <p class="font-semibold text-stone-800">Estado Atual da Busca</p>
+            <p id="dialog-data-status">
+              Exibindo unidades do Estado de São Paulo.
+            </p>
+            <p id="dialog-coords-status" class="text-[11px] text-stone-500"></p>
+            <p
+              id="dialog-network-status"
+              class="text-[11px] text-stone-500"
+            ></p>
+          </div>
+
+          <div
+            class="p-3 rounded-2xl bg-stone-50 border border-stone-200 space-y-1"
+          >
+            <p class="font-semibold text-stone-800">
+              Escopo e Integrações (SP)
+            </p>
+            <ul class="list-disc pl-4 space-y-0.5 text-[11px]">
+              <li>
+                <strong>Trava Estadual SP:</strong> valida CEPs de São Paulo
+                (<code>01000-000</code> a <code>19999-999</code>) e
+                <code>state === "SP"</code> na BrasilAPI v2.
+              </li>
+              <li>
+                <strong>Base Curada SP + Overpass 3 km:</strong> resultados
+                imediatos da sua cidade enriquecidos em segundo plano via
+                Overpass (<code>around:3000</code>,
+                <code>out center 15;</code>).
+              </li>
+              <li>
+                <strong>Ação Zero Fricção:</strong> ligação direta, rota exata
+                no Google Maps e compartilhamento no WhatsApp.
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-1">
+          <button
+            id="btn-ok-dialog"
+            type="button"
+            class="px-4 py-2 rounded-xl bg-[#8A5832] text-white text-xs font-semibold hover:bg-[#754929] transition"
+          >
+            Fechar
+          </button>
+        </div>
+      </div>
+    </dialog>
+
+    <script src="./app.js" defer></script>
+  </body>
+</html>

@@ -1,0 +1,27 @@
+{
+  "name": "PINGO — Portal Integrado de Necessidades, Guias e Orientações",
+  "short_name": "PINGO",
+  "description": "Seu ponto de apoio para localizar serviços comunitários em São Paulo.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#fafaf9",
+  "theme_color": "#8A5832",
+  "lang": "pt-BR",
+  "categories": ["utilities", "social", "education"],
+  "icons": [
+    {
+      "src": "./icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
