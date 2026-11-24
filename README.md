@@ -5,14 +5,28 @@
   <p><em>"Seu ponto de apoio para localizar serviços comunitários em São Paulo."</em></p>
 
   <p>
+    <a href="https://pingo-sp.vercel.app/" target="_blank">
+      <img src="https://img.shields.io/badge/Acessar_App_Online-pingo--sp.vercel.app-8A5832?style=for-the-badge&logo=vercel&logoColor=white" alt="Acessar PINGO Online" />
+    </a>
+  </p>
+
+  <p>
     <img src="https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white" alt="HTML5" />
     <img src="https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=css3&logoColor=white" alt="CSS3" />
     <img src="https://img.shields.io/badge/JavaScript-ES6%2B-F7DF1E?style=flat&logo=javascript&logoColor=black" alt="JavaScript ES6+" />
     <img src="https://img.shields.io/badge/Tailwind_CSS-CDN-38B2AC?style=flat&logo=tailwind-css&logoColor=white" alt="Tailwind CSS" />
-    <img src="https://img.shields.io/badge/PWA-Instalável-8A5832?style=flat" alt="PWA" />
+    <img src="https://img.shields.io/badge/PWA-Instalável-5B7042?style=flat" alt="PWA" />
     <img src="https://img.shields.io/badge/Hospedagem-Vercel-000000?style=flat&logo=vercel&logoColor=white" alt="Vercel" />
   </p>
 </div>
+
+---
+
+## Acesso Online
+
+A aplicação está publicada gratuitamente na Vercel e pronta para uso ou instalação na tela inicial do celular (PWA):
+
+- **Link de produção:** [https://pingo-sp.vercel.app/](https://pingo-sp.vercel.app/)
 
 ---
 
@@ -102,9 +116,9 @@ Basta ter o **Git** instalado e qualquer servidor HTTP estático simples (Node.j
 
 ## Hospedagem Gratuita na Vercel
 
-Este projeto foi arquitetado como uma aplicação 100% estática para ser **hospedada gratuitamente na Vercel**, aproveitando deploy contínuo integrado ao GitHub e HTTPS automático (requisito obrigatório para instalação como PWA no celular).
+Este projeto foi arquitetado como uma aplicação 100% estática e está **hospedado gratuitamente na Vercel** em [https://pingo-sp.vercel.app/](https://pingo-sp.vercel.app/), com deploy contínuo integrado ao GitHub e HTTPS automático (requisito obrigatório para instalação como PWA no celular).
 
-Qualquer pessoa pode abrir o link da Vercel no smartphone (Android ou iOS) e adicionar o **PINGO** diretamente à tela inicial como um aplicativo.
+Qualquer pessoa pode abrir o link no smartphone (Android ou iOS) e adicionar o **PINGO** diretamente à tela inicial como um aplicativo.
 
 ---
 
