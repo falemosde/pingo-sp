@@ -1,24 +1,115 @@
-# PINGO — Portal Integrado de Necessidades, Guias e Orientações
+<div align="center">
+  <img src="./icons/pingo-logo.png" alt="Logo PINGO" width="96" />
+  <h1>PINGO</h1>
+  <p><strong>Portal Integrado de Necessidades, Guias e Orientações</strong></p>
+  <p><em>"Seu ponto de apoio para localizar serviços comunitários em São Paulo."</em></p>
 
-> _"Seu ponto de apoio para localizar serviços comunitários em São Paulo."_
+  <p>
+    <img src="https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white" alt="HTML5" />
+    <img src="https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=css3&logoColor=white" alt="CSS3" />
+    <img src="https://img.shields.io/badge/JavaScript-ES6%2B-F7DF1E?style=flat&logo=javascript&logoColor=black" alt="JavaScript ES6+" />
+    <img src="https://img.shields.io/badge/Tailwind_CSS-CDN-38B2AC?style=flat&logo=tailwind-css&logoColor=white" alt="Tailwind CSS" />
+    <img src="https://img.shields.io/badge/PWA-Instalável-8A5832?style=flat" alt="PWA" />
+    <img src="https://img.shields.io/badge/Hospedagem-Vercel-000000?style=flat&logo=vercel&logoColor=white" alt="Vercel" />
+  </p>
+</div>
 
-Progressive Web App (**PWA**) mobile-first em **HTML5, Vanilla JavaScript (ES6+), Tailwind CSS (CDN) e Lucide Icons (CDN)** com identidade visual inspirada no mascote pinscher caramelo (**PINGO**), focado exclusivamente no **Estado de São Paulo (`01000-000` a `19999-999`)**.
+---
 
-## Identidade Visual e Paleta
+## Sobre o Projeto
 
-- **Cabeçalho e Destaques Escuros:** Marrom café profundo (`bg-amber-950` / `text-amber-50`) com emblema minimalista de pin com orelhinhas pontudas.
-- **Fundo Principal:** Tons quentes suaves (`bg-stone-50` + `bg-amber-50/40`).
-- **Cor Primária:** Caramelo / Canela (`bg-amber-700`, `hover:bg-amber-800`, `text-amber-700`, `border-amber-200`).
-- **Ação Direta (Ligar Agora / WhatsApp):** Verde esmeralda (`bg-emerald-700`, `hover:bg-emerald-800`).
-- **Cards de Serviço:** Fundo branco (`bg-white`), borda sutil quente (`border-stone-200`) e sombra leve (`shadow-sm`).
+O **PINGO** é um **MVP (Minimum Viable Product)** desenvolvido para um **Projeto Interdisciplinar** com foco em impacto social e praticidade no dia a dia.
 
-## Arquitetura e Escopo Regional (SP)
+A proposta nasceu de uma necessidade real: facilitar o acesso de pessoas — especialmente moradores de **comunidades mais carentes** — a informações confiáveis sobre serviços públicos e de apoio comunitário, sem burocracia, sem login e sem consumir muitos dados móveis.
 
-1. **Trava Estadual (SP):** valida CEPs iniciados em `0` ou `1` (`01000-000` a `19999-999`) e confirma `state === "SP"` na BrasilAPI v2; para outros estados exibe _"Este MVP atende exclusivamente o Estado de São Paulo."_
-2. **Resposta Imediata (~220 ms):** exibe imediatamente as unidades reais da cidade/região de SP ordenadas por distância (**Haversine**) a partir de `dados.json`.
-3. **Overpass API Otimizada (em segundo plano):** busca em raio de `3000` metros (`around:3000,lat,lon`) com limite `out center 15;` e timeout curto (4,5 s), enriquecendo sem bloquear a tela nem travar o indicador de carregamento.
+Com uma interface _mobile-first_ simples e botões de ação direta (ligar em 1 toque, abrir rota no Google Maps ou compartilhar no WhatsApp com um vizinho ou familiar), o aplicativo organiza os serviços em **3 pilares essenciais**:
 
-## Como Executar e Publicar na Vercel
+1. **Zeladoria e Infraestrutura:** discagem rápida fixa no topo (`156` Prefeitura/Cata-Bagulho e `195` Sabesp/Emergência de Água e Esgoto), além de prefeituras, subprefeituras e ecopontos para descarte regular.
+2. **Fome e Apoio Alimentar:** localização de unidades do CRAS (Cadastro Único e assistência social), Restaurantes Populares Bom Prato, cozinhas comunitárias e bancos de alimentos.
+3. **Estudos e Oportunidades:** bibliotecas públicas, ETECs/FATECs gratuitas e centros comunitários/culturais.
 
-- **Local:** execute `npx serve .` em `c:\NextJS\apoio-cidadao-pwa` (ou use o **Live Server**).
-- **Vercel:** deploy estático direto da pasta `apoio-cidadao-pwa` (Framework Preset: **Other**, Build Command vazio).
+> **Escopo atual do MVP:** focado no **Estado de São Paulo** (CEPs de `01000-000` a `19999-999`), com cálculo de distância aproximada (fórmula de Haversine) a partir do CEP informado.
+
+---
+
+## Tecnologias Utilizadas
+
+O projeto foi construído de forma propositalmente enxuta — sem frameworks pesados ou etapa de build — para garantir carregamento rápido mesmo em smartphones simples e conexões móveis instáveis:
+
+- **Linguagens:**
+  - **HTML5** (marcação semântica e acessível)
+  - **CSS3** (animações leves, suporte a _safe-area_ mobile e estilos complementares)
+  - **JavaScript (Vanilla JS ES6+)** (manipulação de DOM, consumo assíncrono de APIs, cache local e cálculo geográfico)
+- **Interface & Ícones:**
+  - **Tailwind CSS** (via CDN)
+  - **Lucide Icons** (via CDN)
+- **PWA (Progressive Web App):**
+  - `manifest.json` + **Service Worker (`sw.js`)** para instalação na tela inicial do celular e suporte offline com fallback local (`dados.json`)
+- **APIs Públicas Abertas (sem necessidade de API Key):**
+  - **BrasilAPI v2** (com fallback automático para **ViaCEP**) para resolução de CEP, cidade e coordenadas em SP
+  - **Overpass API (OpenStreetMap)** em segundo plano (raio de 3 km, `out center 15;`) para enriquecimento complementar de pontos próximos
+
+---
+
+## Estrutura do Projeto
+
+```text
+pingo-sp/
+├── index.html          # Estrutura mobile-first, cabeçalho com CEP, abas e modal informativo
+├── app.js              # Lógica principal, trava estadual SP, Haversine, cache e APIs
+├── styles.css          # Estilos complementares, animações e foco acessível
+├── dados.json          # Base local de unidades públicas de SP (funciona também offline)
+├── manifest.json       # Configuração de instalação PWA
+├── sw.js               # Service Worker (cache do App Shell e resiliência offline)
+├── vercel.json         # Headers recomendados para PWA e Service Worker na Vercel
+└── icons/              # Logo PINGO e ícones PWA (192x192 e 512x512)
+```
+
+---
+
+## Como Rodar Localmente
+
+### Pré-requisitos
+
+Basta ter o **Git** instalado e qualquer servidor HTTP estático simples (Node.js, Python ou a extensão Live Server do VS Code).
+
+> **Por que usar um servidor local?** Abrir o `index.html` com duplo clique (`file://`) restringe o `fetch` do `dados.json` e o registro do Service Worker nos navegadores modernos.
+
+### Passo a passo
+
+1. **Clone o repositório:**
+
+   ```bash
+   git clone https://github.com/falemosde/pingo-sp.git
+   cd pingo-sp
+   ```
+
+2. **Suba um servidor estático local** usando uma das opções abaixo:
+   - **Com Node.js (`serve`):**
+     ```bash
+     npx serve .
+     ```
+   - **Com Python 3:**
+     ```bash
+     python -m http.server 8000
+     ```
+   - **Com VS Code (Live Server):**
+     Clique com o botão direito em `index.html` e selecione **Open with Live Server**.
+
+3. **Acesse no navegador:** abra o endereço exibido no terminal (ex.: `http://localhost:3000` ou `http://localhost:8000`) e teste digitando qualquer CEP de São Paulo (ex.: `06763-040`, `01001-000`, `14021-578` ou `12509-590`).
+
+---
+
+## Hospedagem Gratuita na Vercel
+
+Este projeto foi arquitetado como uma aplicação 100% estática para ser **hospedada gratuitamente na Vercel**, aproveitando deploy contínuo integrado ao GitHub e HTTPS automático (requisito obrigatório para instalação como PWA no celular).
+
+Qualquer pessoa pode abrir o link da Vercel no smartphone (Android ou iOS) e adicionar o **PINGO** diretamente à tela inicial como um aplicativo.
+
+---
+
+## Próximos Passos (Evolução Pós-MVP)
+
+- [ ] Expandir a base curada para mais municípios do interior e litoral de São Paulo.
+- [ ] Adicionar formulário comunitário para sugestão e atualização de novos pontos de apoio.
+- [ ] Ampliar o escopo geográfico para outros estados brasileiros.
