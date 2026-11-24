@@ -819,44 +819,35 @@ function updateNetworkStatusUI() {
   const isOnline = navigator.onLine;
   dom.offlineBanner.classList.toggle("hidden", isOnline);
   dom.offlineBanner.classList.toggle("flex", !isOnline);
-  dom.dialogNetworkStatus.textContent = isOnline
-    ? "Conexão detectada: Online"
-    : "Conexão detectada: Offline";
+  if (dom.dialogNetworkStatus) {
+    dom.dialogNetworkStatus.textContent = isOnline
+      ? "Conectado à internet"
+      : "Sem internet — exibindo informações salvas no aparelho";
+  }
 }
 
 function updateModeAndDialogUI() {
-  const osmTotal =
-    state.osmItems.zeladoria.length +
-    state.osmItems.fome.length +
-    state.osmItems.estudos.length;
-
   if (state.location) {
     dom.modeBadge.className =
       "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-800 border border-amber-200 shrink-0";
     dom.modeBadge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-amber-700"></span><span>${escapeHtml(state.location.city)} - SP</span>`;
 
-    const speedLabel =
-      typeof state.lastCepMs === "number"
-        ? state.lastCepMs === 0
-          ? " (cache instantâneo)"
-          : ` (${state.lastCepMs} ms via ${state.location.source})`
-        : "";
-    dom.dialogDataStatus.textContent = `CEP localizado em ${state.location.city} - SP${speedLabel}.${
-      osmTotal > 0 ? ` +${osmTotal} locais extras via Overpass (3 km).` : ""
-    }`;
-    dom.dialogCoordsStatus.textContent =
-      Number.isFinite(state.location.lat) && Number.isFinite(state.location.lon)
-        ? `Coordenadas: ${state.location.lat.toFixed(5)}, ${state.location.lon.toFixed(5)}`
-        : "";
+    const place = state.location.neighborhood
+      ? `${state.location.neighborhood}, ${state.location.city} - SP`
+      : `${state.location.city} - SP`;
+    if (dom.dialogDataStatus) {
+      dom.dialogDataStatus.textContent = `Mostrando serviços próximos a ${place}.`;
+    }
   } else {
     dom.modeBadge.className =
       "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-800 border border-amber-200 shrink-0";
     dom.modeBadge.innerHTML =
       '<span class="w-1.5 h-1.5 rounded-full bg-amber-700"></span><span>Base SP</span>';
 
-    dom.dialogDataStatus.textContent =
-      "Digite qualquer CEP do Estado de São Paulo (01000-000 a 19999-999) para localizar serviços da sua cidade.";
-    dom.dialogCoordsStatus.textContent = "";
+    if (dom.dialogDataStatus) {
+      dom.dialogDataStatus.textContent =
+        "Nenhum CEP informado — digite seu CEP de São Paulo no topo para ver os serviços da sua região.";
+    }
   }
 
   updateNetworkStatusUI();

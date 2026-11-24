@@ -364,21 +364,34 @@
     >
       <div class="p-5 space-y-4">
         <div class="flex items-start justify-between gap-3">
-          <div>
-            <h2
-              id="info-dialog-title"
-              class="text-base font-extrabold text-stone-900"
+          <div class="flex items-center gap-2.5">
+            <div
+              class="w-10 h-10 rounded-xl bg-amber-50 border border-amber-200/80 flex items-center justify-center shrink-0 p-1"
             >
-              Sobre o PINGO
-            </h2>
-            <p class="text-xs text-stone-500 mt-0.5">
-              Portal Integrado de Necessidades, Guias e Orientações
-            </p>
+              <img
+                src="./icons/pingo-logo.png"
+                alt="Logo PINGO"
+                width="34"
+                height="34"
+                class="w-full h-full object-contain"
+              />
+            </div>
+            <div>
+              <h2
+                id="info-dialog-title"
+                class="text-base font-extrabold text-stone-900 leading-tight"
+              >
+                Sobre o PINGO
+              </h2>
+              <p class="text-[11px] text-stone-500 leading-snug mt-0.5">
+                Portal Integrado de Necessidades, Guias e Orientações
+              </p>
+            </div>
           </div>
           <button
             id="btn-close-dialog"
             type="button"
-            class="p-1.5 rounded-xl text-stone-400 hover:text-stone-700 hover:bg-stone-100 transition"
+            class="p-1.5 rounded-xl text-stone-400 hover:text-stone-700 hover:bg-stone-100 transition shrink-0"
             aria-label="Fechar janela de informações"
           >
             <i data-lucide="x" class="w-5 h-5" aria-hidden="true"></i>
@@ -386,60 +399,88 @@
         </div>
 
         <p class="text-xs text-stone-600 leading-relaxed">
-          <em
-            >"Seu ponto de apoio para localizar serviços comunitários em São
-            Paulo."</em
-          >
+          O <strong>PINGO</strong> ajuda você a encontrar serviços públicos e
+          pontos de apoio próximos da sua casa no
+          <strong>Estado de São Paulo</strong>, de forma gratuita e sem precisar
+          fazer cadastro.
         </p>
 
         <div class="space-y-2.5 text-xs text-stone-600">
+          <!-- Guia rápido em 3 passos -->
           <div
-            class="p-3 rounded-2xl bg-stone-50 border border-stone-200 space-y-1"
+            class="p-3.5 rounded-2xl bg-stone-50 border border-stone-200 space-y-2.5"
           >
-            <p class="font-semibold text-stone-800">Estado Atual da Busca</p>
-            <p id="dialog-data-status">
-              Exibindo unidades do Estado de São Paulo.
+            <p class="font-bold text-stone-800">Como usar o aplicativo</p>
+
+            <div class="flex items-start gap-2.5">
+              <span
+                class="w-5 h-5 rounded-full bg-[#8A5832] text-white text-[11px] font-bold flex items-center justify-center shrink-0 mt-0.5"
+                >1</span
+              >
+              <p class="text-[11px] leading-relaxed">
+                <strong>Digite seu CEP:</strong> informe seu CEP de São Paulo no
+                topo para ver os serviços da sua cidade.
+              </p>
+            </div>
+
+            <div class="flex items-start gap-2.5">
+              <span
+                class="w-5 h-5 rounded-full bg-[#8A5832] text-white text-[11px] font-bold flex items-center justify-center shrink-0 mt-0.5"
+                >2</span
+              >
+              <p class="text-[11px] leading-relaxed">
+                <strong>Escolha a categoria:</strong> use as abas abaixo para
+                buscar <em>Zeladoria</em>, <em>Apoio Alimentar</em> ou
+                <em>Estudos e Oportunidades</em>.
+              </p>
+            </div>
+
+            <div class="flex items-start gap-2.5">
+              <span
+                class="w-5 h-5 rounded-full bg-[#5B7042] text-white text-[11px] font-bold flex items-center justify-center shrink-0 mt-0.5"
+                >3</span
+              >
+              <p class="text-[11px] leading-relaxed">
+                <strong>Resolva em um toque:</strong> ligue direto, trace a rota
+                no Google Maps ou compartilhe no WhatsApp com quem precisa.
+              </p>
+            </div>
+          </div>
+
+          <!-- Sua localização atual -->
+          <div
+            class="p-3 rounded-2xl bg-amber-50/60 border border-amber-200/70 space-y-1"
+          >
+            <p class="font-semibold text-stone-800 flex items-center gap-1.5">
+              <i
+                data-lucide="map-pin"
+                class="w-3.5 h-3.5 text-[#8A5832]"
+                aria-hidden="true"
+              ></i>
+              <span>Sua busca atual</span>
             </p>
-            <p id="dialog-coords-status" class="text-[11px] text-stone-500"></p>
+            <p id="dialog-data-status" class="text-[11px] text-stone-700">
+              Nenhum CEP informado — exibindo serviços de exemplo em São Paulo.
+            </p>
             <p
               id="dialog-network-status"
               class="text-[11px] text-stone-500"
             ></p>
           </div>
-
-          <div
-            class="p-3 rounded-2xl bg-stone-50 border border-stone-200 space-y-1"
-          >
-            <p class="font-semibold text-stone-800">
-              Escopo e Integrações (SP)
-            </p>
-            <ul class="list-disc pl-4 space-y-0.5 text-[11px]">
-              <li>
-                <strong>Trava Estadual SP:</strong> valida CEPs de São Paulo
-                (<code>01000-000</code> a <code>19999-999</code>) e
-                <code>state === "SP"</code> na BrasilAPI v2.
-              </li>
-              <li>
-                <strong>Base Curada SP + Overpass 3 km:</strong> resultados
-                imediatos da sua cidade enriquecidos em segundo plano via
-                Overpass (<code>around:3000</code>,
-                <code>out center 15;</code>).
-              </li>
-              <li>
-                <strong>Ação Zero Fricção:</strong> ligação direta, rota exata
-                no Google Maps e compartilhamento no WhatsApp.
-              </li>
-            </ul>
-          </div>
         </div>
+
+        <p class="text-[11px] text-stone-500 leading-relaxed">
+          <strong>Dica:</strong> você pode salvar o PINGO na tela inicial do seu
+          celular pelo menu do navegador para acessar mesmo sem internet.
+        </p>
 
         <div class="flex items-center justify-end gap-2 pt-1">
           <button
             id="btn-ok-dialog"
             type="button"
-            class="px-4 py-2 rounded-xl bg-[#8A5832] text-white text-xs font-semibold hover:bg-[#754929] transition"
+            class="w-full py-2.5 rounded-xl bg-[#8A5832] text-white text-xs font-semibold hover:bg-[#754929] transition"
           >
-            Fechar
+            Entendi
           </button>
         </div>
       </div>
